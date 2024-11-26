@@ -81,22 +81,32 @@ class TodayPatients extends Page implements HasTable
             ->actions([]);
     }
 
+    // get current patient appointment with doctor (if exists)
     public function getCurrentPatientAppointment()
     {
         $currentTime = now();
 
-        $this->currentPatientAppointment =  Patient::whereHas('appointments', function ($query) use ($currentTime) {
-            $query->whereDate('start_at', $currentTime)
-                ->whereDate('end_at', $currentTime);;
-        })->first();
+        $currentPatientQuery = Patient::whereHas('appointments', function ($query) use ($currentTime) {
+            $query->whereDate('start_at', '>=', $currentTime)
+                ->whereDate('end_at', '<=', $currentTime);;
+        });
 
-        return $this->currentPatientAppointment;
+        $this->saveCurrentPatientAppointmentToBeDisplayedInView($currentPatientQuery);
+
+        return $currentPatientQuery;
+    }
+
+    public function saveCurrentPatientAppointmentToBeDisplayedInView($currentPatientQuery)
+    {
+        $this->currentPatientAppointment = $currentPatientQuery->first();
     }
 
     public function todayPatientsQuery()
     {
+        $currentPatientAppointmentId = $this->getCurrentPatientAppointment()->first()?->id;
+
         return Patient::whereHas('appointments', function ($query) {
             $query->whereDate('start_at', now());
-        })->whereNot('id', $this->getCurrentPatientAppointment()->id);
+        })->whereNot('id', $currentPatientAppointmentId);
     }
 }
