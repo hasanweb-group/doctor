@@ -40,6 +40,7 @@ return [
         'patient_end_at' => 'نهاية الموعد للمريض :patient',
         'view' => 'تفاصيل الموعد للمريض :patient',
         'end_at' => 'نهاية الموعد',
+        'no_current_patient_appointment' => 'لا يوجد موعد',
     ],
     'checks' => [
         'title' => 'تواريخ الدخول و الخروج من المستشفى',
