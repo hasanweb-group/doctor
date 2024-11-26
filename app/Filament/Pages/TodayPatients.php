@@ -45,6 +45,7 @@ class TodayPatients extends Page implements HasTable
         return $table
             ->searchable()
             ->query($this->todayPatientsQuery())
+            ->emptyStateHeading(__(Localization::Patient->value . '.empty'))
             ->striped()
             ->columns([
 
@@ -98,7 +99,9 @@ class TodayPatients extends Page implements HasTable
 
     public function saveCurrentPatientAppointmentToBeDisplayedInView($currentPatientQuery)
     {
-        $this->currentPatientAppointment = $currentPatientQuery->first();
+        // WARNING: commented for now
+        /*$this->currentPatientAppointment = $currentPatientQuery->first();*/
+        $this->currentPatientAppointment = Patient::query()->get()->first();
     }
 
     public function todayPatientsQuery()
